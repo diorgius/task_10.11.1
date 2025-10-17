@@ -11,6 +11,10 @@ const colorInput = document.querySelector('.color__input'); // поле с на�
 const weightInput = document.querySelector('.weight__input'); // поле с весом
 const addActionButton = document.querySelector('.add__action__btn'); // кнопка добавления
 
+kindInput.innerHTML = '';
+colorInput.innerHTML = '';
+weightInput.innerHTML ='';
+
 // список фруктов в JSON формате
 let fruitsJSON = `[
   {"kind": "Мангустин", "color": "фиолетовый", "weight": 13},
@@ -22,17 +26,45 @@ let fruitsJSON = `[
 
 // преобразование JSON в объект JavaScript
 let fruits = JSON.parse(fruitsJSON);
-
+console.log(fruits);
 /*** ОТОБРАЖЕНИЕ ***/
 
 // отрисовка карточек
 const display = () => {
   // TODO: очищаем fruitsList от вложенных элементов,
   // чтобы заполнить актуальными данными из fruits
-
+  fruitsList.innerHTML = '';
   for (let i = 0; i < fruits.length; i++) {
     // TODO: формируем новый элемент <li> при помощи document.createElement,
     // и добавляем в конец списка fruitsList при помощи document.appendChild
+    switch (i) {
+      case 0:
+        borderColorClass = 'fruit_violet';
+        break;
+      case 1:
+        borderColorClass = 'fruit_green';
+        break;
+      case 2:
+        borderColorClass = 'fruit_carmazin';
+        break;
+      case 3:
+        borderColorClass = 'fruit_yellow';
+        break;
+      case 4:
+        borderColorClass = 'fruit_lightbrown';
+        break;
+      default:
+        borderColorClass = 'fruit_default';
+    }
+    const itemLi = document.createElement('li');
+    itemLi.className = `fruit__item  ${borderColorClass}`;
+    itemLi.innerHTML = `<div class="fruit__info">  \
+                        <div>index: ${i}</div> \
+                        <div>kind: ${fruits[i].kind}</div> \
+                        <div>color: ${fruits[i].color}</div> \
+                        <div>weight (кг): ${fruits[i].weight}</div> \
+                        </div>`;
+    fruitsList.appendChild(itemLi);
   }
 };
 
@@ -58,8 +90,11 @@ const shuffleFruits = () => {
     // вырезаем его из fruits и вставляем в result.
     // ex.: [1, 2, 3], [] => [1, 3], [2] => [3], [2, 1] => [], [2, 1, 3]
     // (массив fruits будет уменьшатся, а result заполняться)
+    
+    result.push(...fruits.splice(getRandomInt(0, fruits.length - 1), 1));
+    console.log(fruits);
+    console.log(result);
   }
-
   fruits = result;
 };
 
@@ -130,5 +165,12 @@ sortActionButton.addEventListener('click', () => {
 addActionButton.addEventListener('click', () => {
   // TODO: создание и добавление нового фрукта в массив fruits
   // необходимые значения берем из kindInput, colorInput, weightInput
-  display();
+  console.log(kindInput.value);
+  if (kindInput.value === '' || colorInput.value === '' || weightInput.value === '') {
+    alert ('Заполнены не все поля');
+  } else {
+    fruits.push({kind: kindInput.value, color: colorInput.value, weight: weightInput.value});
+    console.log(fruits);
+    display();
+  }
 });
